@@ -1,0 +1,42 @@
+﻿{
+  "title": "Configuration",
+  "type": "object",
+  "properties": {
+    "RecentLocalizedPaths": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": [
+          "string",
+          "null"
+        ]
+      }
+    },
+    "ProjectsRegexFilter": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "SolutionExtension": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "NuspecExtension": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "RecentLocalizedPaths",
+    "ProjectsRegexFilter",
+    "SolutionExtension",
+    "NuspecExtension"
+  ]
+}

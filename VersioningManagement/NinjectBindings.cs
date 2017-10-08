@@ -16,9 +16,16 @@ namespace VersioningManagement
         public override void Load()
         {
             Bind<ILocalizer<SolutionInfo>>().To<SolutionLocalizer>();
+            Bind<ILocalizer<NuspecInfo>>().To<NuspecLocalizer>();
             Bind<ILocalizerRegistry>().To<LocalizerRegistry>().InSingletonScope();
 
-            Bind<IConfigurationManager>().To<ConfigurationManager>();
+            Bind<IConfiguration>().ToMethod(context =>
+            {
+                var configuration = new Configuration.Configuration();
+                configuration.Read();
+
+                return configuration;
+            }).InSingletonScope();
         }
     }
 }

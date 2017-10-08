@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Forms;
 using VersioningManagement.Configuration;
 using VersioningManagement.Localization;
+using VersioningManagement.Versions;
 
 namespace VersioningManagement
 {
@@ -20,21 +21,20 @@ namespace VersioningManagement
         private readonly ILocalizerRegistry _localizerRegistry;
 
         /// <summary>
-        /// The configuration manager
+        /// The configuration
         /// </summary>
-        private readonly IConfigurationManager _configurationManager;
+        private readonly IConfiguration _configuration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindow" /> class.
         /// </summary>
         /// <param name="localizerRegistry">The localizer registry.</param>
-        /// <param name="configurationManager">The configuration manager.</param>
+        /// <param name="configuration">The configuration.</param>
         public MainWindow(
-            ILocalizerRegistry localizerRegistry,
-            IConfigurationManager configurationManager)
+            ILocalizerRegistry localizerRegistry, IConfiguration configuration)
         {
             _localizerRegistry = localizerRegistry;
-            _configurationManager = configurationManager;
+            _configuration = configuration;
 
 
             InitializeComponent();
@@ -52,7 +52,7 @@ namespace VersioningManagement
                 dialog.ShowNewFolderButton = false;
                 dialog.Description = "Select a folder which will be searched for packages";
 
-                var paths = _configurationManager.Configuration.RecentLocalizedPaths;
+                var paths = _configuration.RecentLocalizedPaths;
 
                 //Restore last path
                 if (paths.Any())
@@ -75,7 +75,7 @@ namespace VersioningManagement
                 }
 
                 paths.Insert(0, path.FullName);
-                _configurationManager.Write();
+                _configuration.Write();
 
 
                 //Load all projects and till finished
@@ -89,8 +89,15 @@ namespace VersioningManagement
         /// <param name="directory">The directory.</param>
         private void LoadProjects(DirectoryInfo directory)
         {
-            var searcher = _localizerRegistry.CreateLocalizer<SolutionInfo>();
-            var solutions = searcher.GetItems(directory);
+            var solutionLocalizer = _localizerRegistry.CreateLocalizer<SolutionInfo>();
+            var nuspecLocalizer = _localizerRegistry.CreateLocalizer<NuspecInfo>();
+            var solutions = solutionLocalizer.GetItems(directory);
+
+
+            //TODO:TESTCODE
+            var schema = new ConfigurationManager().GenerateSchema(_configuration);
+            var valid = new ConfigurationManager().IsValid();
+
 
             Dispatcher.Invoke(() =>
             {
@@ -101,6 +108,18 @@ namespace VersioningManagement
                     foreach (var project in solution.Projects)
                     {
                         AddProjectToGrid(project);
+                        //TODO:TESTCODE
+                        var nuspec = nuspecLocalizer.GetItems(project.File.Directory).FirstOrDefault();
+
+                        if (nuspec != null)
+                        {
+                            var nuspecVersion = new NuspecVersion(nuspec.File);
+
+                            nuspecVersion.Version = "$version$-pre";
+                            nuspecVersion.Write();
+                        }
+
+                        var assemblyInfoVersion = new AssemblyInfoVersion(new FileInfo(project.File.Directory + @"\Properties\AssemblyInfo.cs"));
                     }
                 }
             });
