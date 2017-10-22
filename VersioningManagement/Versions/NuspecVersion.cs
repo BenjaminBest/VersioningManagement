@@ -11,7 +11,7 @@ namespace VersioningManagement.Versions
         /// <summary>
         /// The file
         /// </summary>
-        private readonly FileInfo _file;
+        public FileInfo File { get; }
 
         /// <summary>
         /// The manifest
@@ -32,7 +32,7 @@ namespace VersioningManagement.Versions
         /// <param name="file">The file.</param>
         public NuspecVersion(FileInfo file)
         {
-            _file = file;
+            File = file;
             Read();
         }
 
@@ -41,7 +41,10 @@ namespace VersioningManagement.Versions
         /// </summary>
         public void Read()
         {
-            using (Stream stream = File.Open(_file.FullName, FileMode.Open))
+            if (!System.IO.File.Exists(File.FullName))
+                return;
+
+            using (Stream stream = System.IO.File.Open(File.FullName, FileMode.Open))
             {
                 _manifest = Manifest.ReadFrom(stream, false);
                 Version = _manifest.Metadata.Version;
@@ -55,7 +58,7 @@ namespace VersioningManagement.Versions
         {
             _manifest.Metadata.Version = Version;
 
-            using (var stream = File.Open(_file.FullName, FileMode.OpenOrCreate))
+            using (var stream = System.IO.File.Open(File.FullName, FileMode.OpenOrCreate))
             {
                 _manifest.Save(stream);
             }

@@ -1,6 +1,5 @@
-﻿using System.Reflection;
-using System.Windows;
-using Ninject;
+﻿using System.Windows;
+using VersioningManagement.DependencyInjection;
 
 namespace VersioningManagement
 {
@@ -23,10 +22,7 @@ namespace VersioningManagement
         /// </summary>
         private void ConfigureNinject()
         {
-            var kernel = new StandardKernel();
-            kernel.Load(Assembly.GetExecutingAssembly());
-
-            var mainWindow = kernel.Get<MainWindow>();
+            var mainWindow = ServiceLocator.Get<MainWindow>();
             mainWindow.Show();
         }
     }

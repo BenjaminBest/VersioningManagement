@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Ninject;
+using VersioningManagement.DependencyInjection;
 using VersioningManagement.Helpers;
 
 namespace VersioningManagement.Localization
@@ -12,11 +12,6 @@ namespace VersioningManagement.Localization
     public class LocalizerRegistry : ILocalizerRegistry
     {
         /// <summary>
-        /// The kernel
-        /// </summary>
-        private readonly IKernel _kernel;
-
-        /// <summary>
         /// The localizers
         /// </summary>
         private readonly Dictionary<Type, Type> _localizers;
@@ -24,9 +19,8 @@ namespace VersioningManagement.Localization
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalizerRegistry"/> class.
         /// </summary>
-        public LocalizerRegistry(IKernel kernel)
+        public LocalizerRegistry()
         {
-            _kernel = kernel;
             _localizers = TypeHelper.FindNonAbstractTypes(typeof(ILocalizer<>)).ToDictionary(d => d.GetInterfaces().FirstOrDefault().GetGenericArguments()[0], d => d);
         }
 
@@ -42,8 +36,7 @@ namespace VersioningManagement.Localization
 
             var type = _localizers[typeof(TType)];
 
-            return (ILocalizer<TType>)_kernel.Get(type);
-            //return (ILocalizer<TType>)Activator.CreateInstance(type);
+            return (ILocalizer<TType>)ServiceLocator.Get(type);
         }
     }
 }

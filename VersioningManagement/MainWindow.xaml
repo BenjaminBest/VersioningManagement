@@ -6,8 +6,11 @@
         xmlns:local="clr-namespace:VersioningManagement"
         mc:Ignorable="d"
         Title="MainWindow" 
-        Height="450" Width="525"
+        Height="450" Width="973.79"
         Style="{StaticResource CustomWindowStyle}">
+    <Window.DataContext>
+        <Binding Path="MainWindowViewModel" Source="{StaticResource Locator}"></Binding>
+    </Window.DataContext>
     <Grid Name="MainPanel" Margin="5,5,5,5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -26,21 +29,21 @@
             VerticalAlignment="Top">
             <Button Name="LoadFolder" Content="Open Folder" Click="OpenFolder_OnClick" Style="{DynamicResource ButtonFlatStyle}" Background="#0686DB" Foreground="White"></Button>
         </StackPanel>
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Visible">
-            <Grid Name="ContentPanel" Row="1" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" Width="525">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <Label Grid.Column="0" Grid.Row="0" Content="Projects"></Label>
-                <Label Grid.Column="1" Grid.Row="0" Content="Versions"></Label>
-                <Label Grid.Column="2" Grid.Row="0" Content="Actions"></Label>
-            </Grid>
-        </ScrollViewer>
+        <DataGrid 
+            Name ="Projects"
+            Grid.Row="1" 
+            HorizontalAlignment="Left"
+            Margin="0,0,0,0"
+            AutoGenerateColumns="False"
+            CanUserAddRows="False" CanUserResizeRows="False"
+            ItemsSource="{Binding Projects, Mode=TwoWay}" Width="958">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Solution" IsReadOnly="True" CanUserReorder="False" CanUserResize="False" Binding="{Binding Solution.Name}" />
+                <DataGridTextColumn Header="Project" IsReadOnly="True" CanUserReorder="False" CanUserResize="False" Binding="{Binding Name}" />
+                <DataGridTextColumn Header="Nuspec Version" IsReadOnly="False" CanUserReorder="False" CanUserResize="False" Binding="{Binding NuspecVersion.Version}" />
+                <DataGridTextColumn Header="AssemblyInfo Version" IsReadOnly="False" CanUserReorder="False" CanUserResize="False" Binding="{Binding AssemblyInfoVersion.Version}" />
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
     <Window.Resources>
         <Style x:Key="FocusVisual">

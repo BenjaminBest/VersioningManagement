@@ -1,8 +1,10 @@
 ﻿using Ninject.Modules;
 using VersioningManagement.Configuration;
 using VersioningManagement.Localization;
+using VersioningManagement.ViewModel;
+using VersioningManagement.ViewModel.Design;
 
-namespace VersioningManagement
+namespace VersioningManagement.DependencyInjection
 {
     /// <summary>
     /// Module to configure all ninject bindings
@@ -26,6 +28,12 @@ namespace VersioningManagement
 
                 return configuration;
             }).InSingletonScope();
+
+            //ViewModels
+            if (DesignMode.IsEnabled())
+                Bind<MainWindowViewModel>().To<DesignMainWindowViewModel>().InSingletonScope();
+            else
+                Bind<MainWindowViewModel>().To<MainWindowViewModel>().InSingletonScope();
         }
     }
 }

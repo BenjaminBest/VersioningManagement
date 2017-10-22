@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Microsoft.CodeAnalysis;
 using VersioningManagement.Configuration;
 using VersioningManagement.Roslyn;
+using VersioningManagement.Versions;
 
 namespace VersioningManagement.Localization
 {
@@ -17,12 +19,19 @@ namespace VersioningManagement.Localization
         private readonly IConfiguration _configuration;
 
         /// <summary>
+        /// The localizer registry
+        /// </summary>
+        private readonly ILocalizerRegistry _localizerRegistry;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="SolutionLocalizer"/> class.
         /// </summary>
         /// <param name="configuration">The configuration.</param>
-        public SolutionLocalizer(IConfiguration configuration)
+        /// <param name="localizerRegistry"></param>
+        public SolutionLocalizer(IConfiguration configuration, ILocalizerRegistry localizerRegistry)
         {
             _configuration = configuration;
+            _localizerRegistry = localizerRegistry;
         }
 
         /// <summary>
@@ -41,11 +50,32 @@ namespace VersioningManagement.Localization
             {
                 var solution = WorkspaceHelper.GetSolution(file.FullName);
 
-                solutions.Add(new SolutionInfo(file, solution.ToString(), solution.Result.Projects.Filter(_configuration.ProjectsRegexFilter)
-                    .Select(project => new ProjectInfo(new FileInfo(project.FilePath), project.Name))));
+                solutions.Add(new SolutionInfo(file, solution.Result.ToString(), solution.Result.Projects
+                    .Filter(_configuration.ProjectsRegexFilter)
+                    .Select(GetProject)));
             }
 
             return solutions;
+        }
+
+        /// <summary>
+        /// Gets the project.
+        /// </summary>
+        /// <param name="project">The project.</param>
+        /// <returns></returns>
+        private ProjectInfo GetProject(Project project)
+        {
+            var nuspecLocalizer = _localizerRegistry.CreateLocalizer<NuspecInfo>();
+
+            var projectFile = new FileInfo(project.FilePath);
+
+            var nuspec = nuspecLocalizer.GetItems(projectFile.Directory).FirstOrDefault();
+            var nuspecVersion = nuspec != null ? new NuspecVersion(nuspec.File) : null;
+
+            var assemblyInfoVersion =
+                new AssemblyInfoVersion(new FileInfo(projectFile.Directory + @"\Properties\AssemblyInfo.cs"));
+
+            return new ProjectInfo(projectFile, project.Name, assemblyInfoVersion, nuspecVersion);
         }
     }
 }

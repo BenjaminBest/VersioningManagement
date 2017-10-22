@@ -11,7 +11,7 @@ namespace VersioningManagement.Versions
         /// <summary>
         /// The file
         /// </summary>
-        private readonly FileInfo _file;
+        public FileInfo File { get; }
 
         /// <summary>
         /// Gets or sets the version.
@@ -19,7 +19,7 @@ namespace VersioningManagement.Versions
         /// <value>
         /// The version.
         /// </value>
-        public Version Version { get; set; }
+        public string Version { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AssemblyInfoVersion"/> class.
@@ -27,7 +27,7 @@ namespace VersioningManagement.Versions
         /// <param name="file">The file.</param>
         public AssemblyInfoVersion(FileInfo file)
         {
-            _file = file;
+            File = file;
 
             Read();
         }
@@ -37,8 +37,11 @@ namespace VersioningManagement.Versions
         /// </summary>
         public void Read()
         {
+            if (!File.Exists)
+                return;
+
             // open the file
-            var contents = File.ReadAllLines(_file.FullName);
+            var contents = System.IO.File.ReadAllLines(File.FullName);
 
             // find the attribute
             var versionLine = string.Empty;
@@ -59,7 +62,7 @@ namespace VersioningManagement.Versions
             // extract the version number info from the line
             // assumes the version number info is contained in a quoted string in some brackets (it should be!)
             var version = versionLine.Substring(versionLine.IndexOf("(\"", StringComparison.Ordinal) + 2);
-            Version = new Version(version.Substring(0, version.LastIndexOf("\")", StringComparison.Ordinal)));
+            Version = version.Substring(0, version.LastIndexOf("\")", StringComparison.Ordinal));
         }
 
         /// <summary>
