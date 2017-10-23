@@ -1,5 +1,8 @@
 ﻿using System.IO;
-using NuGet;
+using System.Xml;
+using VersioningManagement.Configuration;
+using VersioningManagement.DependencyInjection;
+using VersioningManagement.Helpers;
 
 namespace VersioningManagement.Versions
 {
@@ -14,17 +17,17 @@ namespace VersioningManagement.Versions
         public FileInfo File { get; }
 
         /// <summary>
-        /// The manifest
-        /// </summary>
-        private Manifest _manifest;
-
-        /// <summary>
         /// Gets or sets the version.
         /// </summary>
         /// <value>
         /// The version.
         /// </value>
         public string Version { get; set; }
+
+        /// <summary>
+        /// The XML document
+        /// </summary>
+        private XmlDocument _xmlDocument;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NuspecVersion"/> class.
@@ -41,14 +44,16 @@ namespace VersioningManagement.Versions
         /// </summary>
         public void Read()
         {
-            if (!System.IO.File.Exists(File.FullName))
+            if (!File.Exists)
                 return;
 
-            using (Stream stream = System.IO.File.Open(File.FullName, FileMode.Open))
-            {
-                _manifest = Manifest.ReadFrom(stream, false);
-                Version = _manifest.Metadata.Version;
-            }
+            _xmlDocument = new XmlDocument();
+            _xmlDocument.Load(File.FullName);
+
+            var nsmgr = new XmlNamespaceManager(_xmlDocument.NameTable);
+            nsmgr.AddNamespace("nu", ServiceLocator.Get<IConfiguration>().NuspecXmlNamespace);
+
+            Version = _xmlDocument.SelectSingleNode("//nu:package/nu:metadata/nu:version", nsmgr).IsNotNull(o => o.InnerText);
         }
 
         /// <summary>
@@ -56,12 +61,14 @@ namespace VersioningManagement.Versions
         /// </summary>
         public void Write()
         {
-            _manifest.Metadata.Version = Version;
+            if (!File.Exists)
+                return;
 
-            using (var stream = System.IO.File.Open(File.FullName, FileMode.OpenOrCreate))
-            {
-                _manifest.Save(stream);
-            }
+            var nsmgr = new XmlNamespaceManager(_xmlDocument.NameTable);
+            nsmgr.AddNamespace("nu", ServiceLocator.Get<IConfiguration>().NuspecXmlNamespace);
+
+            _xmlDocument.SelectSingleNode("//nu:package/nu:metadata/nu:version", nsmgr).IsNotNull(o => o.InnerText = Version);
+            _xmlDocument.Save(File.FullName);
         }
     }
 }

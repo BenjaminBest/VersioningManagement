@@ -31,12 +31,19 @@
         "string",
         "null"
       ]
+    },
+    "NuspecXmlNamespace": {
+      "type": [
+        "string",
+        "null"
+      ]
     }
   },
   "required": [
     "RecentLocalizedPaths",
     "ProjectsRegexFilter",
     "SolutionExtension",
-    "NuspecExtension"
+    "NuspecExtension",
+    "NuspecXmlNamespace"
   ]
 }

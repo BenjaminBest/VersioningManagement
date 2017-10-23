@@ -50,7 +50,7 @@ namespace VersioningManagement.Localization
             {
                 var solution = WorkspaceHelper.GetSolution(file.FullName);
 
-                solutions.Add(new SolutionInfo(file, solution.Result.ToString(), solution.Result.Projects
+                solutions.Add(new SolutionInfo(file, solution.Result.Id.Id.ToString(), solution.Result.Projects
                     .Filter(_configuration.ProjectsRegexFilter)
                     .Select(GetProject)));
             }

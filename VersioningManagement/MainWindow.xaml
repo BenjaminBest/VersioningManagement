@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:VersioningManagement"
         mc:Ignorable="d"
         Title="MainWindow" 
-        Height="450" Width="973.79"
+        Height="450" Width="738.79"
         Style="{StaticResource CustomWindowStyle}">
     <Window.DataContext>
         <Binding Path="MainWindowViewModel" Source="{StaticResource Locator}"></Binding>
@@ -31,14 +31,13 @@
         </StackPanel>
         <DataGrid 
             Name ="Projects"
-            Grid.Row="1" 
+            Grid.Row="1"
             HorizontalAlignment="Left"
-            Margin="0,0,0,0"
+            Margin="0,10,0,0"
             AutoGenerateColumns="False"
             CanUserAddRows="False" CanUserResizeRows="False"
-            ItemsSource="{Binding Projects, Mode=TwoWay}" Width="958">
+            ItemsSource="{Binding Projects, Mode=TwoWay}" Width="723">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Solution" IsReadOnly="True" CanUserReorder="False" CanUserResize="False" Binding="{Binding Solution.Name}" />
                 <DataGridTextColumn Header="Project" IsReadOnly="True" CanUserReorder="False" CanUserResize="False" Binding="{Binding Name}" />
                 <DataGridTextColumn Header="Nuspec Version" IsReadOnly="False" CanUserReorder="False" CanUserResize="False" Binding="{Binding NuspecVersion.Version}" />
                 <DataGridTextColumn Header="AssemblyInfo Version" IsReadOnly="False" CanUserReorder="False" CanUserResize="False" Binding="{Binding AssemblyInfoVersion.Version}" />

@@ -40,6 +40,14 @@ namespace VersioningManagement.Configuration
         public string NuspecExtension { get; set; }
 
         /// <summary>
+        /// Gets or sets the nuspec namespace.
+        /// </summary>
+        /// <value>
+        /// The nuspec namespace.
+        /// </value>
+        public string NuspecXmlNamespace { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Configuration"/> class.
         /// </summary>
         public Configuration()
@@ -57,6 +65,7 @@ namespace VersioningManagement.Configuration
             copy.ProjectsRegexFilter = ProjectsRegexFilter;
             copy.SolutionExtension = SolutionExtension;
             copy.NuspecExtension = NuspecExtension;
+            copy.NuspecXmlNamespace = NuspecXmlNamespace;
         }
     }
 }

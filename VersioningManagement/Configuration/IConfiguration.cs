@@ -41,6 +41,14 @@ namespace VersioningManagement.Configuration
         string NuspecExtension { get; set; }
 
         /// <summary>
+        /// Gets or sets the nuspec namespace.
+        /// </summary>
+        /// <value>
+        /// The nuspec namespace.
+        /// </value>
+        string NuspecXmlNamespace { get; set; }
+
+        /// <summary>
         /// Copies this configuration to the given <paramref name="copy"/>
         /// </summary>
         /// <param name="copy">The copy.</param>

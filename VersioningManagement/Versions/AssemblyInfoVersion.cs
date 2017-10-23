@@ -1,5 +1,6 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace VersioningManagement.Versions
 {
@@ -8,6 +9,9 @@ namespace VersioningManagement.Versions
     /// </summary>
     public class AssemblyInfoVersion
     {
+        //private static readonly Regex AssemblyInfoRegex = new Regex(@"(\[assembly\:\s*)(Assembly(File)?Version)(\(""\d+\.\d+\.\d+)((\.(\d+|\*))?)(""\)])");
+        private static readonly Regex AssemblyInfoRegex = new Regex(@"(\[assembly\:\s*)(Assembly(File)?Version)(\("")(.*)(""\)])");
+
         /// <summary>
         /// The file
         /// </summary>
@@ -40,29 +44,31 @@ namespace VersioningManagement.Versions
             if (!File.Exists)
                 return;
 
-            // open the file
-            var contents = System.IO.File.ReadAllLines(File.FullName);
-
-            // find the attribute
-            var versionLine = string.Empty;
-            var versionLineNumber = 0;
-            const string attribute = "AssemblyVersion";
-
-            for (var i = 0; i < contents.Length; i++)
+            using (var sr = File.OpenText())
             {
-                var content = contents[i];
-                if (content.Contains("[assembly: " + attribute + "(") && !content.StartsWith("//"))
+                while (!sr.EndOfStream)
                 {
-                    versionLineNumber = i;
-                    versionLine = content;
-                    break;
+                    var line = sr.ReadLine();
+                    if (line == null)
+                    {
+                        continue;
+                    }
+
+                    if (AssemblyInfoRegex.IsMatch(line))
+                    {
+                        var matches = AssemblyInfoRegex.Matches(line);
+                        if (matches.Count == 1)
+                        {
+                            var groups = matches[0];
+                            if (groups.Groups.Count == 7)
+                            {
+                                Version = groups.Groups[5].Value;
+                                break;
+                            }
+                        }
+                    }
                 }
             }
-
-            // extract the version number info from the line
-            // assumes the version number info is contained in a quoted string in some brackets (it should be!)
-            var version = versionLine.Substring(versionLine.IndexOf("(\"", StringComparison.Ordinal) + 2);
-            Version = version.Substring(0, version.LastIndexOf("\")", StringComparison.Ordinal));
         }
 
         /// <summary>
@@ -70,7 +76,53 @@ namespace VersioningManagement.Versions
         /// </summary>
         public void Write()
         {
+            if (!File.Exists)
+                return;
 
+            var sb = new StringBuilder();
+
+            using (var sr = File.OpenText())
+            {
+                while (!sr.EndOfStream)
+                {
+                    var line = sr.ReadLine();
+                    if (line == null)
+                    {
+                        continue;
+                    }
+
+                    if (AssemblyInfoRegex.IsMatch(line))
+                    {
+                        line = UpdateVersion(line, Version);
+                    }
+
+                    sb.AppendLine(line);
+                }
+            }
+
+            System.IO.File.WriteAllText(File.FullName, sb.ToString());
+        }
+
+        /// <summary>
+        /// Updates the version.
+        /// </summary>
+        /// <param name="line">The line.</param>
+        /// <param name="version">The buildnumber.</param>
+        /// <returns></returns>
+        private static string UpdateVersion(string line, string version)
+        {
+            var matches = AssemblyInfoRegex.Matches(line);
+            if (matches.Count == 1)
+            {
+                var groups = matches[0];
+                if (groups.Groups.Count == 7)
+                {
+                    return
+                        $"{groups.Groups[1].Value}{groups.Groups[2].Value}{groups.Groups[4].Value}{version}{groups.Groups[6].Value}";
+                }
+            }
+
+            return line;
         }
     }
 }
