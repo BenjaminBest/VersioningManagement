@@ -8,7 +8,7 @@ The tool search for every solution within a folder and then analyzes every solut
 
 An easy to use UI is generated which allows easy and fast version changes.
 
-![UI](.png)
+![UI](https://user-images.githubusercontent.com/29073072/32146725-2fcafe3e-bcdc-11e7-8828-c31848fa08cc.png)
 
 Implementation
 --------------
