@@ -47,6 +47,7 @@ namespace VersioningManagement.ViewModel
         public ICommand DecreaseMajorVersionCommand { get; set; }
         public ICommand DecreaseMinorVersionCommand { get; set; }
         public ICommand DecreaseRevisionVersionCommand { get; set; }
+        public ICommand ToggleBuildVersionCommand { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProjectViewModel"/> class.
@@ -64,6 +65,7 @@ namespace VersioningManagement.ViewModel
             DecreaseMajorVersionCommand = new DecreaseMajorVersionCommand();
             DecreaseMinorVersionCommand = new DecreaseMinorVersionCommand();
             DecreaseRevisionVersionCommand = new DecreaseRevisionVersionCommand();
+            ToggleBuildVersionCommand = new ToggleBuildVersionCommand();
         }
     }
 }

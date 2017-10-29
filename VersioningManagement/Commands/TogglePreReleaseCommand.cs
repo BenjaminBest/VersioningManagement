@@ -33,17 +33,22 @@ namespace VersioningManagement.Commands
             var projects = parameter.As<ObservableCollection<ProjectViewModel>>();
             var preReleaseIdentifier = ServiceLocator.Get<IConfiguration>().PreReleaseIdentifier;
 
+            bool? isPreRelease = null;
             foreach (var projectViewModel in projects)
             {
-                if (projectViewModel.NuspecVersion.Version.EndsWith(preReleaseIdentifier))
+                if (!isPreRelease.HasValue)
+                    isPreRelease = projectViewModel.NuspecVersion.Version.EndsWith(preReleaseIdentifier);
+
+                if (isPreRelease.Value)
                 {
                     projectViewModel.NuspecVersion.Version =
                         projectViewModel.NuspecVersion.Version.Replace(preReleaseIdentifier, string.Empty);
                 }
                 else
                 {
-                    projectViewModel.NuspecVersion.Version =
-                        projectViewModel.NuspecVersion.Version + preReleaseIdentifier;
+                    if (!projectViewModel.NuspecVersion.Version.EndsWith(preReleaseIdentifier))
+                        projectViewModel.NuspecVersion.Version =
+                            projectViewModel.NuspecVersion.Version + preReleaseIdentifier;
                 }
             }
         }

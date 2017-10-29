@@ -193,6 +193,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Commands\ToggleBuildVersionCommand.cs" />
     <Compile Include="Commands\TogglePreReleaseCommand.cs" />
     <Compile Include="Commands\DecreaseRevisionVersionCommand.cs" />
     <Compile Include="Commands\DecreaseMinorVersionCommand.cs" />
