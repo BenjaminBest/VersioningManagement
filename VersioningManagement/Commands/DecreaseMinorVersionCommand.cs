@@ -24,17 +24,21 @@ namespace VersioningManagement.Commands
             if (string.IsNullOrEmpty(version))
                 return false;
 
-            if (!Versioning.TryParse(version, out Versioning oldVersion))
-                return false;
-
-            return oldVersion.Minor != default(int);
+            return !string.IsNullOrEmpty(version) && VersionChanger.TryParse(version, out VersionChanger oldVersion);
         }
 
         /// <summary>Defines the method to be called when the command is invoked.</summary>
         /// <param name="parameter">Data used by the command.  If the command does not require data to be passed, this object can be set to <see langword="null" />.</param>
         public void Execute(object parameter)
         {
-            parameter.As<ProjectViewModel>().IsNotNull(p => Versioning.DecreaseMinorVersion(p.AssemblyInfoVersion.Version));
+            var assemblyInfo = parameter.As<ProjectViewModel>().IsNotNull(p => p.AssemblyInfoVersion);
+
+            if (!VersionChanger.TryParse(assemblyInfo.Version, out VersionChanger version))
+                return;
+
+            version.DecreaseVersion(VersionPart.Minor);
+
+            assemblyInfo.Version = version.Version;
         }
 
         /// <summary>

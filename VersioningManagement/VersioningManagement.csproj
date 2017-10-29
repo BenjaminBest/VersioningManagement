@@ -222,7 +222,8 @@
     <Compile Include="Localization\SolutionLocalizer.cs" />
     <Compile Include="Versions\AssemblyInfoVersion.cs" />
     <Compile Include="Versions\NuspecVersion.cs" />
-    <Compile Include="Versions\Versioning.cs" />
+    <Compile Include="Versions\VersionChanger.cs" />
+    <Compile Include="Versions\VersionPart.cs" />
     <Compile Include="ViewModel\Design\DesignMode.cs" />
     <Compile Include="ViewModel\Design\DesignMainWindowViewModel.cs" />
     <Compile Include="ViewModel\AssemblyInfoViewModel.cs" />
