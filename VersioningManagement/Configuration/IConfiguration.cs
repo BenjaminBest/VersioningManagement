@@ -49,6 +49,14 @@ namespace VersioningManagement.Configuration
         string NuspecXmlNamespace { get; set; }
 
         /// <summary>
+        /// Gets or sets the pre release identifier.
+        /// </summary>
+        /// <value>
+        /// The pre release identifier.
+        /// </value>
+        string PreReleaseIdentifier { get; set; }
+
+        /// <summary>
         /// Copies this configuration to the given <paramref name="copy"/>
         /// </summary>
         /// <param name="copy">The copy.</param>

@@ -48,6 +48,14 @@ namespace VersioningManagement.Configuration
         public string NuspecXmlNamespace { get; set; }
 
         /// <summary>
+        /// Gets or sets the pre release identifier.
+        /// </summary>
+        /// <value>
+        /// The pre release identifier.
+        /// </value>
+        public string PreReleaseIdentifier { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Configuration"/> class.
         /// </summary>
         public Configuration()
@@ -66,6 +74,7 @@ namespace VersioningManagement.Configuration
             copy.SolutionExtension = SolutionExtension;
             copy.NuspecExtension = NuspecExtension;
             copy.NuspecXmlNamespace = NuspecXmlNamespace;
+            copy.PreReleaseIdentifier = PreReleaseIdentifier;
         }
     }
 }

@@ -25,11 +25,13 @@
             Height="Auto"
             Margin="0,0,0,0"
             Grid.Row="0" 
-            Orientation="Vertical"
+            Orientation="Horizontal"
             VerticalAlignment="Top">
             <Button Name="LoadFolder" Content="Open Folder" Click="OpenFolder_OnClick" Style="{DynamicResource ButtonFlatStyle}" Background="#0686DB" Foreground="White"></Button>
+            <Button Name="TogglePrerelease" Content="Toggle Prerelease" Command="{Binding TogglePreReleaseCommand}" CommandParameter="{Binding Projects}" Margin="5,0,0,0" Style="{DynamicResource ButtonFlatStyle}" Background="#0686DB" Foreground="White"></Button>
         </StackPanel>
         <DataGrid 
+            Background="#2D2D30"
             Name ="Projects"
             Grid.Row="1"
             HorizontalAlignment="Left"
@@ -41,6 +43,83 @@
                 <DataGridTextColumn Header="Project" IsReadOnly="True" CanUserReorder="False" CanUserResize="False" Binding="{Binding Name}" />
                 <DataGridTextColumn Header="Nuspec Version" IsReadOnly="False" CanUserReorder="False" CanUserResize="False" Binding="{Binding NuspecVersion.Version}" />
                 <DataGridTextColumn Header="AssemblyInfo Version" IsReadOnly="False" CanUserReorder="False" CanUserResize="False" Binding="{Binding AssemblyInfoVersion.Version}" />
+                <DataGridTemplateColumn Header="Actions" Width="1.5*">
+                 <DataGridTemplateColumn.HeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="DataGridColumnHeader">
+                                        <Grid Name="Root">
+                                            <VisualStateManager.VisualStateGroups>
+                                                <VisualStateGroup x:Name="CommonStates">
+                                                    <VisualState x:Name="Normal" />
+                                                    <VisualState x:Name="MouseOver"/>
+                                                    <VisualState x:Name="Pressed"/>
+                                                </VisualStateGroup>
+                                                <VisualStateGroup x:Name="SortStates">
+                                                    <VisualState x:Name="Unsorted" />
+                                                    <VisualState x:Name="SortAscending"/>
+                                                    <VisualState x:Name="SortDescending"/>
+                                                </VisualStateGroup>
+                                            </VisualStateManager.VisualStateGroups>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Rectangle x:Name="BackgroundRectangle" Stretch="Fill" Grid.ColumnSpan="2" />
+                                            <Rectangle x:Name="BackgroundGradient" Stretch="Fill" Grid.ColumnSpan="2" />
+                                            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Grid.Column="0" Grid.ColumnSpan="2">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="auto"/>
+                                                    <RowDefinition Height="auto"/>
+                                                    <RowDefinition Height="auto"/>
+                                                </Grid.RowDefinitions>
+
+                                                <TextBlock Text="Actions" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="2" Grid.Row="0"/>
+                                                <Border Grid.Row="1" Background="White" BorderBrush="White" BorderThickness="1" Height="1" />
+                                                <Grid Grid.Row="2" >
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="0.5*"/>
+                                                        <ColumnDefinition Width="0.5*"/>
+                                                        <ColumnDefinition Width="0.5*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Margin="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" Text="Major"/>
+                                                    <TextBlock Margin="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Text="Minor"/>
+                                                    <TextBlock Margin="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" Text="Revision"/>
+                                                </Grid>
+                                            </Grid>
+                                            <Rectangle Name="VerticalSeparator" Grid.Column="1" Width="1" VerticalAlignment="Stretch" Fill="{TemplateBinding SeparatorBrush}" Visibility="{TemplateBinding SeparatorVisibility}" />
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </DataGridTemplateColumn.HeaderStyle>
+                 <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="0.5*"/>
+                                    <ColumnDefinition Width="0.5*"/>
+                                    <ColumnDefinition Width="0.5*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Column="0">
+                                    <Button Style="{DynamicResource ButtonFlatStyle}" Command="{Binding IncreaseMajorVersionCommand}" CommandParameter="{Binding .}" Background="#8DA3C1" Foreground="White" Width="20" Margin="0,0,1,0">+</Button>
+                                    <Button Style="{DynamicResource ButtonFlatStyle}" Command="{Binding DecreaseMajorVersionCommand}" CommandParameter="{Binding .}" Background="#8DA3C1" Foreground="White" Width="20">-</Button>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Column="1">
+                                    <Button Style="{DynamicResource ButtonFlatStyle}" Command="{Binding IncreaseMinorVersionCommand}" CommandParameter="{Binding .}" Background="#8DA3C1" Foreground="White" Width="20" Margin="0,0,1,0">+</Button>
+                                    <Button Style="{DynamicResource ButtonFlatStyle}" Command="{Binding DecreaseMinorVersionCommand}" CommandParameter="{Binding .}" Background="#8DA3C1" Foreground="White" Width="20">-</Button>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Column="2">
+                                    <Button Style="{DynamicResource ButtonFlatStyle}" Command="{Binding IncreaseRevisionVersionCommand}" CommandParameter="{Binding .}" Background="#8DA3C1" Foreground="White" Width="20" Margin="0,0,1,0">+</Button>
+                                    <Button Style="{DynamicResource ButtonFlatStyle}" Command="{Binding DecreaseRevisionVersionCommand}" CommandParameter="{Binding .}" Background="#8DA3C1" Foreground="White" Width="20">-</Button>
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

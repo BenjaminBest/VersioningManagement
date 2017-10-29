@@ -19,5 +19,16 @@ namespace VersioningManagement.Helpers
         {
             return obj == null ? default(TResult) : whenNotNull(obj);
         }
+
+        /// <summary>
+        /// Casts the specified object.
+        /// </summary>
+        /// <typeparam name="TType">The type of the cast.</typeparam>
+        /// <param name="obj">The object.</param>
+        /// <returns></returns>
+        public static TType As<TType>(this object obj) where TType : class
+        {
+            return obj as TType;
+        }
     }
 }

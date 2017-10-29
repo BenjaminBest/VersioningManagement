@@ -6,5 +6,6 @@
   "ProjectsRegexFilter": "\\.Tests",
   "SolutionExtension": "*.sln",
   "NuspecExtension": "*.nuspec",
-  "NuspecXmlNamespace": "http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd"
+  "NuspecXmlNamespace": "http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd",
+  "PreReleaseIdentifier": "-pre"
 }

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using VersioningManagement.Configuration;
+using VersioningManagement.DependencyInjection;
 using VersioningManagement.ViewModel;
 
 namespace VersioningManagement
@@ -26,6 +27,8 @@ namespace VersioningManagement
         {
             _configuration = configuration;
 
+            //TODO: Remove hack to initialize the commands before the InitializeComponent
+            ServiceLocator.Get<MainWindowViewModel>();
 
             InitializeComponent();
         }

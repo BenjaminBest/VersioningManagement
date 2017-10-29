@@ -37,6 +37,12 @@
         "string",
         "null"
       ]
+    },
+    "PreReleaseIdentifier": {
+      "type": [
+        "string",
+        "null"
+      ]
     }
   },
   "required": [
@@ -44,6 +50,7 @@
     "ProjectsRegexFilter",
     "SolutionExtension",
     "NuspecExtension",
-    "NuspecXmlNamespace"
+    "NuspecXmlNamespace",
+    "PreReleaseIdentifier"
   ]
 }

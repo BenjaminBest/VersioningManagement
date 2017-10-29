@@ -192,6 +192,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Commands\TogglePreReleaseCommand.cs" />
+    <Compile Include="Commands\DecreaseRevisionVersionCommand.cs" />
+    <Compile Include="Commands\DecreaseMinorVersionCommand.cs" />
+    <Compile Include="Commands\IncreaseRevisionVersionCommand.cs" />
+    <Compile Include="Commands\IncreaseMinorVersionCommand.cs" />
+    <Compile Include="Commands\DecreaseMajorVersionCommand.cs" />
+    <Compile Include="Commands\IncreaseMajorVersionCommand.cs" />
     <Compile Include="Configuration\Configuration.cs" />
     <Compile Include="Configuration\ConfigurationManager.cs" />
     <Compile Include="Configuration\IConfiguration.cs" />
@@ -214,6 +221,7 @@
     <Compile Include="Localization\SolutionLocalizer.cs" />
     <Compile Include="Versions\AssemblyInfoVersion.cs" />
     <Compile Include="Versions\NuspecVersion.cs" />
+    <Compile Include="Versions\Versioning.cs" />
     <Compile Include="ViewModel\Design\DesignMode.cs" />
     <Compile Include="ViewModel\Design\DesignMainWindowViewModel.cs" />
     <Compile Include="ViewModel\AssemblyInfoViewModel.cs" />
