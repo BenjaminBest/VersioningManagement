@@ -223,7 +223,7 @@ namespace VersioningManagement.Versions
 
             var valid = int.TryParse(Regex.Match(input, regex, RegexOptions.IgnoreCase).Groups[group].Value, out output);
 
-            //Hack to parse asteriks
+            //Hack to parse asterisks
             if (!valid & Regex.Match(input, regex, RegexOptions.IgnoreCase).Groups[group].Value.Equals("*"))
             {
                 output = int.MaxValue;
